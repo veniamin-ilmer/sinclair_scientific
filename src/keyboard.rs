@@ -25,7 +25,7 @@ impl Keyboard {
       
       if code == -1.0 { //Depress event
         chip.current_keypress = 0;
-      } else if code == -255.0 { //Restart
+      } else if code == 512.0 { //Restart
         chip.pc = Default::default(); //This seems to be hardwired...
       } else {
         chip.current_keypress = code as u16;
