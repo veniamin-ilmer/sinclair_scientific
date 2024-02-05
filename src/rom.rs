@@ -139,24 +139,38 @@ pub const CONSTANTS: [u4; 16] = [
   u4::new(0),
 ];
 
-pub const ALU_CONFIG: [u32; 13] = [
-  0b00000011100000000000000000000000,  //Shift right
-  0b00000000011100000000000000000000,  //Shift left
-
-  0b00011000000000001111111110000000,  //Subtract
-  0b00000000000000000000000000000000,  //Hex
-
-  0b10111010010000001100110001101000,  //first arg is C
-  0b01000100100100000011001110000111,  //first arg is A
-
-  0b11001001001000000101010110011001,  //second arg is B
-  0b00110100000001111010101001100110,  //second arg is K
-
-  0b00001100100100010000001010100011,  //dest is A
-  0b11100010010001000000110100010100,  //dest is C
-
-  0b00010001001000100000000001001000,  //dest is B
-  0b00000000000010000000000000000000,  //exchange a, b
-
-  0b00000100000000000000000000000000,  //WaitForKey
+use chips::tms0800::alu::*;
+pub const ALU_OPCODES: [Opcode; 32] = [
+  Opcode::new(Dest::A, Arg1::A, Oper::Plus, Arg2::B, false),                //0: A = A + B
+  Opcode::new(Dest::A, Arg1::A, Oper::Plus, Arg2::K, false),                //1: A = A + K
+  Opcode::new(Dest::C, Arg1::A, Oper::Plus, Arg2::K, false),                //2: C = A + K
+  Opcode::new(Dest::B, Arg1::C, Oper::Plus, Arg2::B, false),                //3: B = C + B
+  Opcode::new(Dest::C, Arg1::None, Oper::Plus, Arg2::B, false),             //4: C = B
+  Opcode::new(Dest::A, Arg1::C, Oper::Plus, Arg2::K, false),                //5: A = C + K
+  Opcode::new(Dest::B, Arg1::C, Oper::Plus, Arg2::K, false),                //6: B = C + K
+  Opcode::new(Dest::A, Arg1::A, Oper::Minus, Arg2::B, false),               //7: A = A - B
+  Opcode::new(Dest::C, Arg1::A, Oper::Minus, Arg2::B, false),               //8: C = A - B
+  Opcode::new(Dest::A, Arg1::A, Oper::Minus, Arg2::K, false),               //9: A = A - K
+  Opcode::new(Dest::C, Arg1::C, Oper::Minus, Arg2::B, false),               //10: C = C - B
+  Opcode::new(Dest::C, Arg1::C, Oper::Minus, Arg2::K, false),               //11: C = C - K
+  Opcode::new(Dest::None, Arg1::A, Oper::Minus, Arg2::B, false),            //12: A - B
+  Opcode::new(Dest::None, Arg1::A, Oper::Minus, Arg2::K, false),            //13: A - K
+  Opcode::new(Dest::None, Arg1::C, Oper::Minus, Arg2::B, false),            //14: C - B
+  Opcode::new(Dest::None, Arg1::C, Oper::Minus, Arg2::K, false),            //15: C - K
+  Opcode::new(Dest::A, Arg1::None, Oper::Plus, Arg2::K, false),             //16: A = K
+  Opcode::new(Dest::B, Arg1::None, Oper::Plus, Arg2::K, false),             //17: B = K
+  Opcode::new(Dest::C, Arg1::None, Oper::Plus, Arg2::K, false),             //18: C = K
+  Opcode::new(Dest::None, Arg1::None, Oper::ExchangeAB, Arg2::None, false), //19: Exchange A and B
+  Opcode::new(Dest::A, Arg1::A, Oper::Shl, Arg2::None, false),              //20: A = A << 4
+  Opcode::new(Dest::B, Arg1::None, Oper::Shl, Arg2::B, false),              //21: B = B << 4
+  Opcode::new(Dest::C, Arg1::C, Oper::Shl, Arg2::None, false),              //22: C = C << 4
+  Opcode::new(Dest::A, Arg1::A, Oper::Shr, Arg2::None, false),              //23: A = A >> 4
+  Opcode::new(Dest::B, Arg1::None, Oper::Shr, Arg2::B, false),              //24: B = B >> 4
+  Opcode::new(Dest::C, Arg1::C, Oper::Shr, Arg2::None, false),              //25: C = C >> 4
+  Opcode::new(Dest::A, Arg1::A, Oper::Wait, Arg2::K, false),                //26: A = A + K Wait
+  Opcode::new(Dest::A, Arg1::C, Oper::Minus, Arg2::B, false),               //27: A = C - B
+  Opcode::new(Dest::B, Arg1::C, Oper::Minus, Arg2::K, false),               //28: B = C - K
+  Opcode::new(Dest::C, Arg1::C, Oper::Plus, Arg2::K, false),                //29: C = C + K
+  Opcode::new(Dest::C, Arg1::A, Oper::Plus, Arg2::B, false),                //30: C = A + B
+  Opcode::new(Dest::C, Arg1::C, Oper::Plus, Arg2::B, false),                //31: C = C + B
 ];
